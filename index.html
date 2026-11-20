@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#fffdfb">
+<title>Um encontro para guardar</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#fffdfb;color:#39332f;
+ font-family:Georgia,'Times New Roman',serif;
+ overflow:hidden;
+}
+.screen{
+ position:fixed;inset:0;display:none;
+ align-items:center;justify-content:center;
+ flex-direction:column;text-align:center;
+ padding:24px;overflow:hidden;
+}
+.screen.active{display:flex}
+#intro{background:#fffdfb}
+.envelope{
+ width:min(75vw,310px);cursor:pointer;
+ animation:float 3s ease-in-out infinite;
+ filter:drop-shadow(0 15px 20px #00000012);
+}
+@keyframes float{50%{transform:translateY(-12px)}}
+.hint{
+ margin-top:30px;font-size:14px;
+ letter-spacing:2px;color:#a18d7e;
+}
+#flowers{background:#fffdfb}
+#flowerField{
+ position:absolute;inset:0;overflow:hidden;
+}
+.flower{
+ position:absolute;width:var(--size);
+ height:var(--size);object-fit:contain;
+ opacity:0;animation:bloom var(--duration) ease-out forwards;
+ filter:drop-shadow(0 5px 8px #00000010);
+}
+@keyframes bloom{
+ 0%{opacity:0;transform:scale(.15) rotate(-35deg)}
+ 65%{opacity:1}
+ 100%{opacity:.96;transform:scale(1) rotate(var(--rotation))}
+}
+.flower-title{
+ z-index:2;font-size:clamp(22px,5vw,38px);
+ font-weight:normal;background:#fffdfbdb;
+ padding:15px 22px;border-radius:3px;
+}
+#letter{
+ background:#fffdfb;
+}
+#letter:before{
+ content:"";position:absolute;inset:0;
+ background-image:
+ url('flor1.jpg.JPG'),url('flor2.jpg.JPG'),
+ url('flor3.jpg.JPG'),url('flor4.jpg.JPG'),
+ url('flor5.jpg.jpg');
+ background-size:33% 33%;
+ background-position:0 0,50% 0,100% 0,0 100%,100% 100%;
+ background-repeat:no-repeat;
+ opacity:.22;filter:blur(.3px);
+}
+.paper{
+ position:relative;z-index:1;
+ width:min(90vw,520px);padding:clamp(25px,7vw,48px);
+ background:#fffdf2ed;
+ box-shadow:0 15px 55px #54433118;
+}
+.paper h1{
+ font-size:clamp(25px,6vw,35px);
+ font-weight:normal;margin:0 0 30px;
+}
+.paper p{
+ font-size:clamp(16px,4vw,19px);
+ line-height:1.8;margin:0 0 18px;
+}
+button{
+ border:1px solid #bca99a;background:transparent;
+ color:#776457;padding:13px 25px;
+ font-family:inherit;font-size:15px;
+ cursor:pointer;margin-top:20px;
+}
+.fade{animation:fade .9s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+</style>
+</head>
+
+<body>
+
+<section id="intro" class="screen active">
+ <img class="envelope" src="envelope.jpg.JPG"
+      alt="Envelope" onclick="openFlowers()">
+ <div class="hint">TOQUE PARA ABRIR</div>
+</section>
+
+<section id="flowers" class="screen">
+ <div id="flowerField"></div>
+ <div class="flower-title">Algumas flores para você.</div>
+</section>
+
+<section id="letter" class="screen">
+ <div class="paper fade">
+  <h1>Para você.</h1>
+  <p>Espero que tenha gostado do nosso encontro.</p>
+  <p>Queria fazer desse dia algo um pouquinho diferente, algo que pudesse ficar guardado de alguma forma, mesmo depois que ele terminasse.</p>
+  <p>E pensei que algumas flores seriam uma maneira bonita de fazer isso.</p>
+ </div>
+</section>
+
+<script>
+const flowerImages=[
+ 'flor1.jpg.JPG',
+ 'flor2.jpg.JPG',
+ 'flor3.jpg.JPG',
+ 'flor4.jpg.JPG',
+ 'flor5.jpg.jpg'
+];
+
+function show(id){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+}
+
+function openFlowers(){
+ show('flowers');
+ const field=document.getElementById('flowerField');
+ field.innerHTML='';
+ let count=0;
+ const total=110;
+
+ function addFlower(){
+  if(count>=total)return;
+  const img=document.createElement('img');
+  img.className='flower';
+  img.src=flowerImages[Math.floor(Math.random()*flowerImages.length)];
+  img.style.left=Math.random()*94+'vw';
+  img.style.top=Math.random()*94+'vh';
+  img.style.setProperty('--size',(45+Math.random()*95)+'px');
+  img.style.setProperty('--duration',(1.2+Math.random()*1.5)+'s');
+  img.style.setProperty('--rotation',(Math.random()*70-35)+'deg');
+  field.appendChild(img);
+  count++;
+  setTimeout(addFlower,65);
+ }
+ addFlower();
+ setTimeout(()=>show('letter'),10500);
+}
+</script>
+</body>
+</html>
